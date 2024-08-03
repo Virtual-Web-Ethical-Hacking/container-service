@@ -5,6 +5,7 @@ from utils.docker.docker import start_container, stop_container, build_images
 from utils.utils import change_dockerfile
 from utils.authorization.admin_authorization import AdminAuthorization
 from utils.authorization.user_authorization import UserAuthorization
+from utils.authorization.general_authorization import GeneralAuthorization
 
 router = APIRouter()
 
@@ -32,7 +33,7 @@ async def startContainer(token: str = Depends(UserAuthorization())):
 
 # Bisa user dan admin
 @router.get("/stop/{container_id}")
-async def stopContainer(container_id, token: str = Depends(JWTBearer())):
+async def stopContainer(container_id, token: str = Depends(GeneralAuthorization())):
     # Stop and delete the container
     try:
         stop_container(container_id)
@@ -52,19 +53,13 @@ async def stopContainer(container_id, token: str = Depends(JWTBearer())):
 async def updateImages(file: UploadFile, token: str = Depends(AdminAuthorization())):
     # Update image from Dockerfile
     try:
-        # change_dockerfile(data.text)
+        change_dockerfile(file.file.read().decode())
         # build_images()
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content={"message": file.file.read().decode()}
+            content={"message": "Build images success"}
         )
-        
-
-        # return JSONResponse(
-        #     status_code=status.HTTP_200_OK,
-        #     content={"message": "Build images success"}
-        # )
     
     except:
         return JSONResponse(

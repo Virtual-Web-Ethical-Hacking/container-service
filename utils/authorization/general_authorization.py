@@ -7,12 +7,12 @@ from dotenv import dotenv_values
 config = dotenv_values(".env")
 AUTH_API = config["AUTH_API"]
 
-class UserAuthorization(HTTPBearer):
+class GeneralAuthorization(HTTPBearer):
     def __init__(self, auto_error: bool = True):
-        super(UserAuthorization, self).__init__(auto_error=auto_error)
+        super(GeneralAuthorization, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
-        credentials: HTTPAuthorizationCredentials = await super(UserAuthorization, self).__call__(request)
+        credentials: HTTPAuthorizationCredentials = await super(GeneralAuthorization, self).__call__(request)
 
         # Check user
         req = requests.post(
