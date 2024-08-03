@@ -1,13 +1,10 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, UploadFile
 from fastapi.responses import JSONResponse
 
 from utils.docker.docker import start_container, stop_container, build_images
 from utils.utils import change_dockerfile
-from utils.jwt.user_bearer import UserBearer
-from utils.jwt.admin_bearer import AdminBearer
-from utils.jwt.auth_bearer import JWTBearer
-from models.models import Dockerfile
-
+from utils.authorization.admin_authorization import AdminAuthorization
+from utils.authorization.user_authorization import UserAuthorization
 
 router = APIRouter()
 
@@ -17,7 +14,7 @@ async def root():
 
 # Hanya bisa user
 @router.get("/start")
-async def startContainer(token: str = Depends(UserBearer())):
+async def startContainer(token: str = Depends(UserAuthorization())):
     # Create container and start
     # Return container id, creds for login (username, and password)
     try:
@@ -52,16 +49,22 @@ async def stopContainer(container_id, token: str = Depends(JWTBearer())):
 
 # Hanya Admin
 @router.post("/update-images")
-async def updateImages(data: Dockerfile, token: str = Depends(AdminBearer())):
+async def updateImages(file: UploadFile, token: str = Depends(AdminAuthorization())):
     # Update image from Dockerfile
     try:
-        change_dockerfile(data.text)
-        build_images()
+        # change_dockerfile(data.text)
+        # build_images()
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content={"message": "Build images success"}
+            content={"message": file.file.read().decode()}
         )
+        
+
+        # return JSONResponse(
+        #     status_code=status.HTTP_200_OK,
+        #     content={"message": "Build images success"}
+        # )
     
     except:
         return JSONResponse(
@@ -71,7 +74,7 @@ async def updateImages(data: Dockerfile, token: str = Depends(AdminBearer())):
 
 # Hanya admin
 @router.get("/read-dockerfile")
-async def read(token: str = Depends(AdminBearer())):
+async def read(token: str = Depends(AdminAuthorization())):
     # Read dockefile
     try:
         f = open("utils/docker/Dockerfile", "r")
