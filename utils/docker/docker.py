@@ -4,8 +4,8 @@ from dotenv import dotenv_values
 config = dotenv_values(".env")
 image_name = config["IMAGES_NAME"]
 
-# CLIENT = docker.APIClient(base_url="tcp://127.0.0.1:2375")
-CLIENT = "Fa"
+CLIENT = docker.APIClient(base_url="tcp://127.0.0.1:2375")
+# CLIENT = "Fa"
 
 def start_container():
     # Create and start the container
