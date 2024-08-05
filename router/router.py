@@ -54,7 +54,7 @@ async def updateImages(file: UploadFile, token: str = Depends(AdminAuthorization
     # Update image from Dockerfile
     try:
         change_dockerfile(file.file.read().decode())
-        # build_images()
+        build_images()
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -85,3 +85,11 @@ async def read(token: str = Depends(AdminAuthorization())):
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"message": "Error occured"}
         )
+
+# Hanya admin
+@router.get("/tes")
+async def read(token: str = Depends(AdminAuthorization())):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": token}
+    )
