@@ -15,7 +15,7 @@ async def root():
 
 # Hanya bisa user
 @router.get("/start")
-async def startContainer(token: str = Depends(UserAuthorization())):
+async def startContainer(_: str = Depends(UserAuthorization())):
     # Create container and start
     # Return container id, creds for login (username, and password)
     try:
@@ -33,7 +33,7 @@ async def startContainer(token: str = Depends(UserAuthorization())):
 
 # Bisa user dan admin
 @router.get("/stop/{container_id}")
-async def stopContainer(container_id, token: str = Depends(GeneralAuthorization())):
+async def stopContainer(container_id, _: str = Depends(GeneralAuthorization())):
     # Stop and delete the container
     try:
         stop_container(container_id)
@@ -50,7 +50,7 @@ async def stopContainer(container_id, token: str = Depends(GeneralAuthorization(
 
 # Hanya Admin
 @router.post("/update-images")
-async def updateImages(file: UploadFile, token: str = Depends(AdminAuthorization())):
+async def updateImages(file: UploadFile, _: str = Depends(AdminAuthorization())):
     # Update image from Dockerfile
     try:
         change_dockerfile(file.file.read().decode())
@@ -69,7 +69,7 @@ async def updateImages(file: UploadFile, token: str = Depends(AdminAuthorization
 
 # Hanya admin
 @router.get("/read-dockerfile")
-async def read(token: str = Depends(AdminAuthorization())):
+async def read(_: str = Depends(AdminAuthorization())):
     # Read dockefile
     try:
         f = open("utils/docker/Dockerfile", "r")
