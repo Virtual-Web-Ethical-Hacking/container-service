@@ -5,7 +5,7 @@ import requests
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
-AUTH_API = config["AUTH_API"]
+USER_API = config["USER_API"]
 
 class GeneralAuthorization(HTTPBearer):
     def __init__(self, auto_error: bool = True):
@@ -16,7 +16,7 @@ class GeneralAuthorization(HTTPBearer):
 
         # Check user
         req = requests.post(
-            f"{AUTH_API}/user/authorization",
+            f"{USER_API}/user/authorization",
             headers = {
                 "Authorization": f"Bearer {credentials.credentials}"
             }
@@ -25,15 +25,4 @@ class GeneralAuthorization(HTTPBearer):
         if req.status_code == 200:
             return credentials.credentials
         
-        # Check Admin
-        req = requests.post(
-            f"{AUTH_API}/admin/authorization",
-            headers = {
-                "Authorization": f"Bearer {credentials.credentials}"
-            }
-        )
-
-        if req.status_code == 200:
-            return credentials.credentials
-
         raise HTTPException(status_code=401, detail="Not authenticate.")
