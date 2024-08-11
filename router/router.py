@@ -49,7 +49,7 @@ async def startContainer(creds: ContainerInformation, token: str = Depends(UserA
 
 # Bisa user dan admin
 @router.get("/stop/{container_id}")
-async def stopContainer(container_id: str, token: str = Depends(GeneralAuthorization())):
+async def stopContainer(container_id: str, data: str = Depends(GeneralAuthorization())):
     # Stop and delete the container
     try:
         # Getting user info
@@ -59,11 +59,11 @@ async def stopContainer(container_id: str, token: str = Depends(GeneralAuthoriza
         req = requests.post(
             f"{USER_API}/management/profile",
             headers = {
-                "Authorization": f"Bearer {token}"
+                "Authorization": f"Bearer {data['token']}"
             }
         )
 
-        stop_container(container_id, req.json()["npm"])
+        stop_container(container_id, req.json()["npm"], data["is_admin"])
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,

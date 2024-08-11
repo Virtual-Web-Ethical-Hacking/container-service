@@ -23,6 +23,10 @@ class GeneralAuthorization(HTTPBearer):
         )
 
         if req.status_code == 200:
-            return credentials.credentials
+            return {
+                "token": credentials.credentials,
+                "user_id": req.json()["user_id"],
+                "is_admin": req.json()["authorization"],
+            }
         
         raise HTTPException(status_code=401, detail="Not authenticate.")

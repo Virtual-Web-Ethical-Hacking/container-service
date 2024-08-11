@@ -24,13 +24,15 @@ def start_container(name: str):
     return container.get('Id')
 
 
-def stop_container(container_id: str, name: str):
+def stop_container(container_id: str, name: str, is_admin: bool):
     # Cek apakah name sama dengan nama container
     # Stop and delete container based on ID
-    get_container = CLIENT.containers(filters={'name': name})
-    if get_container:
-        if str(get_container[0].id) != container_id:
-            raise Exception()
+
+    if not is_admin:
+        get_container = CLIENT.containers(filters={'name': name})
+        if get_container:
+            if str(get_container[0].id) != container_id:
+                raise Exception()
 
     CLIENT.stop(container_id)
     CLIENT.remove_container(container_id)
