@@ -6,6 +6,7 @@ from utils.utils import change_dockerfile
 from utils.authorization.admin_authorization import AdminAuthorization
 from utils.authorization.user_authorization import UserAuthorization
 from utils.authorization.general_authorization import GeneralAuthorization
+from models.models import Credential
 
 router = APIRouter()
 
@@ -15,15 +16,15 @@ async def root():
 
 # Hanya bisa user
 @router.get("/start")
-async def startContainer(_: str = Depends(UserAuthorization())):
-    # Create container and start
-    # Return container id, creds for login (username, and password)
+async def startContainer(creds: Credential, _: str = Depends(UserAuthorization())):
+    # Create container and start (input creds for login (username, and password))
+    # Return container id
     try:
         container_id = start_container()
         
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content={"message": f"Your container id is {container_id}"}
+            content={"container_id": container_id}
         )
     except:
         return JSONResponse(
@@ -33,7 +34,7 @@ async def startContainer(_: str = Depends(UserAuthorization())):
 
 # Bisa user dan admin
 @router.get("/stop/{container_id}")
-async def stopContainer(container_id, _: str = Depends(GeneralAuthorization())):
+async def stopContainer(container_id: str, _: str = Depends(GeneralAuthorization())):
     # Stop and delete the container
     try:
         stop_container(container_id)
@@ -85,11 +86,3 @@ async def read(_: str = Depends(AdminAuthorization())):
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"message": "Error occured"}
         )
-
-# Hanya admin
-@router.get("/tes")
-async def read(token: str = Depends(AdminAuthorization())):
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"message": token}
-    )
