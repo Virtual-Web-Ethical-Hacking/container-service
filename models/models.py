@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class Credential(BaseModel):
+class ContainerInformation(BaseModel):
     username: str
     password: str

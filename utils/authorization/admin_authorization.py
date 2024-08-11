@@ -21,7 +21,7 @@ class AdminAuthorization(HTTPBearer):
             }
         )
 
-        if (req.status_code) == 200 and (req.json["authorization"]):
+        if (req.status_code) == 200 and (req.json()["authorization"]):
             return credentials.credentials
         else:
             raise HTTPException(status_code=401, detail="Not admin.")

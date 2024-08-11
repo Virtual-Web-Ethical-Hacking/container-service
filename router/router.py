@@ -1,3 +1,6 @@
+import requests
+from dotenv import dotenv_values
+
 from fastapi import APIRouter, status, Depends, UploadFile
 from fastapi.responses import JSONResponse
 
@@ -6,7 +9,7 @@ from utils.utils import change_dockerfile
 from utils.authorization.admin_authorization import AdminAuthorization
 from utils.authorization.user_authorization import UserAuthorization
 from utils.authorization.general_authorization import GeneralAuthorization
-from models.models import Credential
+from models.models import ContainerInformation
 
 router = APIRouter()
 
@@ -16,16 +19,28 @@ async def root():
 
 # Hanya bisa user
 @router.get("/start")
-async def startContainer(creds: Credential, _: str = Depends(UserAuthorization())):
+async def startContainer(creds: ContainerInformation, token: str = Depends(UserAuthorization())):
     # Create container and start (input creds for login (username, and password))
     # Return container id
     try:
-        container_id = start_container()
+        # Getting user info
+        config = dotenv_values(".env")
+        USER_API = config["USER_API"]
+
+        req = requests.post(
+            f"{USER_API}/management/profile",
+            headers = {
+                "Authorization": f"Bearer {token}"
+            }
+        )
+
+        container_id = start_container(req.json()["npm"])
         
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={"container_id": container_id}
         )
+    
     except:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -34,15 +49,27 @@ async def startContainer(creds: Credential, _: str = Depends(UserAuthorization()
 
 # Bisa user dan admin
 @router.get("/stop/{container_id}")
-async def stopContainer(container_id: str, _: str = Depends(GeneralAuthorization())):
+async def stopContainer(container_id: str, token: str = Depends(GeneralAuthorization())):
     # Stop and delete the container
     try:
-        stop_container(container_id)
+        # Getting user info
+        config = dotenv_values(".env")
+        USER_API = config["USER_API"]
+
+        req = requests.post(
+            f"{USER_API}/management/profile",
+            headers = {
+                "Authorization": f"Bearer {token}"
+            }
+        )
+
+        stop_container(container_id, req.json()["npm"])
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={"message": f"Container {container_id} is deleted"}
         )
+    
     except:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,

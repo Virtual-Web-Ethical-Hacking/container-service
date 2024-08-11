@@ -21,7 +21,7 @@ class UserAuthorization(HTTPBearer):
             }
         )
 
-        if (req.status_code == 200) and (not req.json["authorization"]):
+        if (req.status_code == 200) and (not req.json()["authorization"]):
             return credentials.credentials
         else:
             raise HTTPException(status_code=401, detail="Not user.")
