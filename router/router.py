@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 from fastapi import APIRouter, status, Depends, UploadFile
 from fastapi.responses import JSONResponse
 
-from utils.docker.docker import start_container, stop_container, build_images
+from utils.docker.docker import start_container, stop_container, build_images, get_container_info
 from utils.utils import change_dockerfile
 from utils.authorization.admin_authorization import AdminAuthorization
 from utils.authorization.user_authorization import UserAuthorization
@@ -16,6 +16,25 @@ router = APIRouter()
 @router.get("/")
 async def root():
     return {"message": "Hello World from Instance"}
+
+
+# Hanya bisa admin
+@router.get("/info/{container_id}")
+async def infoContainer(container_id: str, data: str = Depends(AdminAuthorization())):
+    # Stop and delete the container
+    try:
+        result = get_container_info(container_id)
+
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"data": result}
+        )
+    
+    except:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"message": "Error occured"}
+        )
 
 # Hanya bisa user
 @router.get("/start")
