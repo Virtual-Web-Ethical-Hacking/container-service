@@ -7,9 +7,19 @@ image_name = config["IMAGES_NAME"]
 CLIENT = docker.APIClient(base_url="tcp://127.0.0.1:2375")
 # CLIENT = "Fa"
 
-# Hanya placeholder
+
 def get_container_info(container_id: str):
-    return True
+    container = CLIENT.containers(all=True, filters={"id": container_id})[0]
+
+    return [
+        { "key": "Container ID", "value": container["Id"] },
+        { "key": "Container Name", "value": container["Names"][0] },
+        { "key": "Images ID", "value": container["ImageID"] },
+        { "key": "Images Name", "value": container["Image"] },
+        { "key": "Port", "value": container["Ports"] },
+        { "key": "Created", "value": container["Created"] },
+        { "key": "Owner", "value": container["Id"] }
+    ]
 
 def start_container(name: str):
     # Create and start the container
