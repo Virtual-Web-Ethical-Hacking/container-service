@@ -20,7 +20,7 @@ async def root():
 
 # Hanya bisa admin
 @router.get("/info/{container_id}")
-async def infoContainer(container_id: str, data: str = Depends(AdminAuthorization())):
+async def infoContainer(container_id: str, _: str = Depends(AdminAuthorization())):
     # Stop and delete the container
     try:
         result = get_container_info(container_id)

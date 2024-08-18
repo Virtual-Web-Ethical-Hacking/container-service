@@ -18,7 +18,7 @@ def get_container_info(container_id: str):
         { "key": "Images ID", "value": container["ImageID"] },
         { "key": "Images Name", "value": container["Image"] },
         { "key": "Port", "value": container["Ports"] },
-        { "key": "Created", "value": datetime.fromtimestamp(container["Created"], tz=timezone(timedelta(hours=7))) },
+        { "key": "Created", "value": str(datetime.fromtimestamp(container["Created"], tz=timezone(timedelta(hours=7)))) },
         { "key": "Owner", "value": container["Id"] }
     ]
 
