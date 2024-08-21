@@ -37,7 +37,8 @@ async def infoContainer(container_id: str, _: str = Depends(AdminAuthorization()
         )
 
 # Hanya bisa user
-@router.get("/start")
+# Belum selsai, tinggal masukin username dan password saja
+@router.post("/start")
 async def startContainer(creds: ContainerInformation, token: str = Depends(UserAuthorization())):
     # Create container and start (input creds for login (username, and password))
     # Return container id
@@ -46,7 +47,7 @@ async def startContainer(creds: ContainerInformation, token: str = Depends(UserA
         config = dotenv_values(".env")
         USER_API = config["USER_API"]
 
-        req = requests.post(
+        req = requests.get(
             f"{USER_API}/management/profile",
             headers = {
                 "Authorization": f"Bearer {token}"
@@ -67,7 +68,7 @@ async def startContainer(creds: ContainerInformation, token: str = Depends(UserA
         )
 
 # Bisa user dan admin
-@router.get("/stop/{container_id}")
+@router.delete("/stop/{container_id}")
 async def stopContainer(container_id: str, data: str = Depends(GeneralAuthorization())):
     # Stop and delete the container
     try:
