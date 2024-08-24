@@ -76,7 +76,7 @@ async def stopContainer(container_id: str, data: str = Depends(GeneralAuthorizat
         config = dotenv_values(".env")
         USER_API = config["USER_API"]
 
-        req = requests.post(
+        req = requests.get(
             f"{USER_API}/management/profile",
             headers = {
                 "Authorization": f"Bearer {data['token']}"

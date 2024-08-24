@@ -1,2 +1,2 @@
 FROM alpine
-CMD ["echo", "Hello Virtual Web!"]
+CMD ["echo", "Hello Virtual Web! 2"]
