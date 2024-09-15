@@ -2,10 +2,7 @@ from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 import requests
-from dotenv import dotenv_values
-
-config = dotenv_values(".env")
-USER_API = config["USER_API"]
+from env import USER_API
 
 class GeneralAuthorization(HTTPBearer):
     def __init__(self, auto_error: bool = True):

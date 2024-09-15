@@ -1,11 +1,11 @@
 import docker
 from datetime import datetime, timezone, timedelta
-from dotenv import dotenv_values
 
-config = dotenv_values(".env")
-image_name = config["IMAGES_NAME"]
+from env import IMAGES_NAME, DOCKER_CLIENT
 
-CLIENT = docker.APIClient(base_url="tcp://127.0.0.1:2375")
+image_name = IMAGES_NAME
+
+CLIENT = docker.APIClient(base_url=DOCKER_CLIENT)
 # CLIENT = "Fa"
 
 

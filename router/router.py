@@ -1,5 +1,5 @@
 import requests
-from dotenv import dotenv_values
+from env import USER_API
 
 from fastapi import APIRouter, status, Depends, UploadFile
 from fastapi.responses import JSONResponse
@@ -44,9 +44,6 @@ async def startContainer(creds: ContainerInformation, token: str = Depends(UserA
     # Return container id
     try:
         # Getting user info
-        config = dotenv_values(".env")
-        USER_API = config["USER_API"]
-
         req = requests.get(
             f"{USER_API}/management/profile",
             headers = {
@@ -73,9 +70,6 @@ async def stopContainer(container_id: str, data: str = Depends(GeneralAuthorizat
     # Stop and delete the container
     try:
         # Getting user info
-        config = dotenv_values(".env")
-        USER_API = config["USER_API"]
-
         req = requests.get(
             f"{USER_API}/management/profile",
             headers = {
