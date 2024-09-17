@@ -41,7 +41,7 @@ async def infoContainer(container_id: str, _: str = Depends(AdminAuthorization()
 @router.post("/start")
 async def startContainer(creds: ContainerInformation, token: str = Depends(UserAuthorization())):
     # Create container and start (input creds for login (username, and password))
-    # Return container id
+    # Return container id and port
     try:
         # Getting user info
         req = requests.get(
@@ -51,11 +51,15 @@ async def startContainer(creds: ContainerInformation, token: str = Depends(UserA
             }
         )
 
-        container_id = start_container(req.json()["npm"])
+        port = creds.port + 3000
+        container_id = start_container(req.json()["npm"], port)
         
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content={"container_id": container_id}
+            content={
+                "container_id": container_id,
+                "port": port
+            }
         )
     
     except:

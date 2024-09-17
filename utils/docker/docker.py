@@ -22,14 +22,17 @@ def get_container_info(container_id: str):
         { "key": "Owner", "value": container["Id"] }
     ]
 
-def start_container(name: str):
+def start_container(name: str, port: int):
     # Create and start the container
     # Return the container id
     # Nama container menggunakan NPM
     container = CLIENT.create_container(
+                    ports=[80],
+                    host_config=CLIENT.create_host_config(port_bindings={
+                        80: port,
+                    }),
                     image=image_name,
                     name=name,
-                    command="/bin/sh",
                     detach=True,
                     tty=True,
                 )
