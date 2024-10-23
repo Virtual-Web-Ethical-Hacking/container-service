@@ -5,8 +5,7 @@ from env import IMAGES_NAME, DOCKER_CLIENT
 
 image_name = IMAGES_NAME
 
-CLIENT = docker.APIClient(base_url=DOCKER_CLIENT)
-# CLIENT = "Fa"
+CLIENT = docker.APIClient(base_url=DOCKER_CLIENT, use_ssh_client=False)
 
 
 def get_container_info(container_id: str):
