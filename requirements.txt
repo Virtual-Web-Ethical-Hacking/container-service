@@ -10,3 +10,4 @@ uvicorn==0.29.0
 python-multipart==0.0.9
 docker==7.1.0
 paramiko==3.5.0
+pexpect==4.9.0

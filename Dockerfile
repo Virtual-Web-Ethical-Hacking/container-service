@@ -14,6 +14,10 @@ RUN \
     python3 -m pip install -r requirements.txt --no-cache-dir && \
     apk --purge del .build-deps
 
+# Install ssh
+RUN \
+    apk add --no-cache openssh-client
+
 # Copy the application code to the working directory
 COPY . .
 

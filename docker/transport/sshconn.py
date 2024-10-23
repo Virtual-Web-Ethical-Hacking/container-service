@@ -224,8 +224,8 @@ class SSHHTTPAdapter(BaseHTTPAdapter):
             )
             
             # Wait for the prompt and send 'yes'
-            # ssh_session.expect("Do you accept and acknowledge the statement above ? (yes/no) :")
-            # ssh_session.sendline("yes")
+            ssh_session.expect("(yes/no/[fingerprint])? ")
+            ssh_session.sendline("yes")
 
             # Wait for the password prompt and send the password
             ssh_session.expect("password:")
